@@ -46,3 +46,24 @@ export async function deleteMarker(Marker: Model<IMarker>, req: Request, res: Re
   }
 }
 
+
+export const updateMarker = async (Marker: Model<IMarker>, req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const { position, text } = req.body;
+
+  try {
+    const updatedMarker = await Marker.findByIdAndUpdate(id, { position, text }, { new: true });
+    if (updatedMarker) {
+      res.json(updatedMarker);
+    } else {
+      res.status(404).json({ message: 'Marker not found' });
+    }
+  } catch (error: unknown) {
+    let errorMessage = 'An unknown error occurred';
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      errorMessage = (error as { message: string }).message;
+    }
+    console.error("Error updating marker:", errorMessage);
+    res.status(500).json({ message: 'Internal Server Error', error: errorMessage });
+  }
+};
