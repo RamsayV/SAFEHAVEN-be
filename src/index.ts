@@ -21,6 +21,10 @@ app.use(cors({
     credentials: true,
 }))
 
+app.get("/health", async(req: Request, res: Response) => {
+    res.send({ message: "Looking good baby"})
+})
+
 
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
